@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affinity Live - AI Assistant with Vision</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="nav-content">
+                <div class="nav-left">
+                    <h1 class="app-title">Affinity Live Assistant</h1>
+                    <span class="app-subtitle">AI-Powered Voice & Vision</span>
+                </div>
+                <div class="nav-right">
+                    <div class="status-indicator" id="statusIndicator">
+                        <span class="status-dot"></span>
+                        <span id="statusText">Ready</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-layout">
+            <!-- Left Sidebar - Screen Preview & Controls -->
+            <aside class="left-sidebar">
+                <div class="sidebar-section">
+                    <h2 class="section-title">Screen Sharing</h2>
+                    <div class="screen-preview" id="screenPreview">
+                        <div class="screen-status-badge" id="screenStatusBadge" style="display: none;">
+                            ● Sharing Active
+                        </div>
+                        <div class="preview-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <p>Click "Share Screen" to start</p>
+                        </div>
+                        <canvas id="screenCanvas" style="display: none;"></canvas>
+                    </div>
+                    <div class="screen-controls">
+                        <button id="shareScreenBtn" class="btn btn-secondary btn-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            Share Screen
+                        </button>
+                        <button id="captureBtn" class="btn btn-accent btn-block" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            Capture & Analyze
+                        </button>
+                        <button id="pipBtn" class="btn btn-small-icon" disabled title="Picture-in-Picture">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="14" rx="2" ry="2"></rect>
+                                <rect x="7" y="8" width="8" height="6"></rect>
+                            </svg>Start Picture In Picture Mode
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h2 class="section-title">Audio Response</h2>
+                    <div class="audio-player-wrapper">
+                        <audio id="audioPlayer" controls>
+                            Your browser does not support audio.
+                        </audio>
+                        <button id="downloadAudioBtn" class="btn btn-small-icon" disabled title="Download Audio">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section webcam-section">
+                    <h2 class="section-title">Webcam Assistant</h2>
+                    <div class="webcam-preview" id="webcamPreview">
+                        <div class="webcam-status-badge" id="webcamStatusBadge" style="display: none;">
+                            ● Camera Active
+                        </div>
+                        <div class="preview-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="10" r="3"></circle>
+                                <path d="M3 21a9 9 0 0 1 18 0"></path>
+                            </svg>
+                            <p>Start the webcam to capture a photo</p>
+                        </div>
+                    </div>
+                    <div class="webcam-controls">
+                        <button id="startWebcamBtn" class="btn btn-secondary btn-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            Start Webcam
+                        </button>
+
+                        <!-- Manual Prompt Input for Webcam (shown when webcam is active) -->
+                        <div id="webcamPromptContainer" class="webcam-prompt-container" style="display: none;">
+                            <label for="webcamPromptInput" class="webcam-prompt-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                Your Question (optional)
+                            </label>
+                            <textarea
+                                id="webcamPromptInput"
+                                class="webcam-prompt-input"
+                                placeholder="Type your question here... (or leave empty for default prompt)"
+                                rows="2"
+                            ></textarea>
+                            <p class="webcam-prompt-hint">Type your question manually if you can't use voice</p>
+                        </div>
+
+                        <button id="captureWebcamBtn" class="btn btn-accent btn-block" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            Capture & Analyze
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Area - Chat & Input -->
+            <section class="center-content">
+                <!-- Input Area -->
+                <div class="input-card">
+                    <div class="input-header">
+                        <h2 class="section-title">Your Message</h2>
+                        <div class="mode-controls">
+                            <button id="startVoiceBtn" class="btn btn-primary btn-compact">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                                Enable Voice
+                            </button>
+                            <button id="startBtn" class="btn btn-secondary btn-compact">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                Text
+                            </button>
+                            <button id="stopBtn" class="btn btn-danger btn-compact" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                </svg>
+                                Stop
+                            </button>
+                        </div>
+                    </div>
+                    <textarea
+                        id="promptInput"
+                        placeholder="Ask me anything... I can analyze your screen, answer questions, and more!"
+                        rows="3"
+                    ></textarea>
+                    <div class="input-actions" style="margin-top:12px; display:flex; gap:8px; align-items:center; justify-content:space-between;">
+                        <span class="placeholder-text">(captures shared screen and submits current message)</span>
+                        <div style="margin-left:12px;">
+                            <button id="captureAskBtn" class="btn btn-accent">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                                Ask to Share Screen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Response Area -->
+                <div class="response-card">
+                    <div class="response-header">
+                        <h2 class="section-title">AI Response</h2>
+                    </div>
+                    <div id="responseDisplay" class="response-content">
+                        <div class="welcome-message">
+                            <div class="welcome-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--primary);">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <h3>Welcome to Affinity Live!</h3>
+                            <p>Start a conversation by:</p>
+                            <ul>
+                                <li>Click "Voice" to speak with me</li>
+                                <li>Type a message and click "Text"</li>
+                                <li>Share your screen and click "Capture & Analyze"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Sidebar - Conversation History -->
+            <aside class="right-sidebar">
+                <div class="sidebar-section full-height">
+                    <div class="chat-header">
+                        <h2 class="section-title">Conversation History</h2>
+                    </div>
+                    <div class="chat-history" id="chatHistory">
+                        <div class="chat-empty">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <p>Your conversation will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p><b>Testing Version</b> • Powered by MetaAffinity.net • Built by Imran</p>
+        </footer>
+    </div>
+
+    <!-- Marked.js for Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
