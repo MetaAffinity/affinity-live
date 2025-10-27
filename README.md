@@ -1,4 +1,4 @@
-# Gemini Live - Voice & Screen Share Assistant
+# Affinity Live - Voice & Screen Share Assistant
 
 This project demonstrates how to use the Google Gemini Live API with native audio capabilities for voice interaction and screen sharing analysis.
 
