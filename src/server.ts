@@ -110,7 +110,7 @@ async function startVoiceSession(client: ClientConnection) {
     });
 
     // Use the exact model from the working src/index.ts example
-    const model = 'models/gemini-2.0-flash-exp';
+    const model = 'models/gemini-2.5-flash';
     console.log('Using model:', model);
 
     if (!process.env.GEMINI_API_KEY) {
@@ -224,7 +224,7 @@ async function startGeminiSession(client: ClientConnection, prompt: string) {
       apiKey: process.env.GEMINI_API_KEY!,
     });
 
-    const model = 'models/gemini-2.0-flash-exp';
+    const model = 'models/gemini-2.5-flash';
 
     const config = {
       responseModalities: [Modality.AUDIO, Modality.TEXT],
@@ -291,7 +291,7 @@ async function analyzeImageWithStandardAPI(client: ClientConnection, base64Data:
     client.ws.send(JSON.stringify({ type: 'connected' }));
 
     const apiKey = process.env.GEMINI_API_KEY;
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const requestBody = {
       contents: [{
